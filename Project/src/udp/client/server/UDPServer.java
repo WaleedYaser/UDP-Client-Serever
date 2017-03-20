@@ -25,10 +25,10 @@ public class UDPServer {
 
                 // Extracting recieved packet 
                 String message =new String (recievepacket.getData());
-                System.out.println(message);
+                System.out.println("Recieve: " + message);
 
                 // send response to the client 
-               
+                System.out.println("Processing ...");
                 String response = ConvertToUpper(message) ;
                 byte[]senddata=response.getBytes();
                 InetAddress IPAddress = InetAddress.getByName("localhost");
@@ -37,6 +37,8 @@ public class UDPServer {
                                                                 IPAddress,
                                                                 9090);
                 server.send(sendpacket);
+                System.out.println("Send: " + response);
+                System.out.println("----------------------------");
             } 
                   
         } catch (SocketException ex) {
