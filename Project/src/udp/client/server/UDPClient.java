@@ -1,41 +1,54 @@
+package udp.client.server;
+
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UDPClient {
-    public static void main(String[] args) throws Exception {
+    
+    static DatagramSocket clientsocket;
+    
+    public static void main(String[] args) {
         
         //create the client socket that used to contact to udp server 
-        
-        DatagramSocket clientsocket=new DatagramSocket(9090);
-        
+        try {
+            clientsocket=new DatagramSocket(9090);
+        } catch (SocketException ex) {
+            Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
+        }  
         
         while (true)
         {
             // read user input
             Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter a word to capitalize: ");
+            System.out.print("Enter a word to convert to lower: ");
             String message = scanner.next();
             
             // sending to sever
-            byte[]senddata=message.getBytes();
-            InetAddress IPAddress=InetAddress.getByName("localhost");
-            DatagramPacket sendpacket = new DatagramPacket (senddata,
-                                                          senddata.length,
-                                                          IPAddress,
-                                                          2000);
-            clientsocket.send(sendpacket);
+            try 
+            {
+                byte[]senddata=message.getBytes();
+                InetAddress IPAddress=InetAddress.getByName("localhost");
+                DatagramPacket sendpacket = new DatagramPacket (senddata,
+                                                              senddata.length,
+                                                              IPAddress,
+                                                              2000);
+                clientsocket.send(sendpacket);
 
-            // receiving from server 
-            byte[]receivedata=new byte[100];
-            DatagramPacket recievepacket = new DatagramPacket (receivedata,
-                                                               receivedata.length);
-            clientsocket.receive(recievepacket);
-            String processedWord = new String(recievepacket.getData());
-            System.out.println("Processed: " + processedWord);
-            System.out.println("----------------------------");
-        }
-                  
+                // receiving from server 
+                byte[]receivedata=new byte[100];
+                DatagramPacket recievepacket = new DatagramPacket (receivedata,
+                                                                   receivedata.length);
+                clientsocket.receive(recievepacket);
+                String processedWord = new String(recievepacket.getData());
+                System.out.println("Processed: " + processedWord);
+                System.out.println("----------------------------");
+                
+            } catch(IOException ex) {
+                System.err.println("IO exception");
+            }   
+        }             
     }
-   
-    }
+}
