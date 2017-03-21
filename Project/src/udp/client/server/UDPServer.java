@@ -6,8 +6,10 @@ import java.util.logging.Logger;
 
 public class UDPServer {
     
+    static DatagramSocket server;
+    
     public static void main(String[] args) {
-          DatagramSocket server = null;
+          
         try {
             //  create the udp server socket with specific port number
             server = new DatagramSocket(2000);
@@ -32,7 +34,7 @@ public class UDPServer {
 
                     // send response to the client 
                     System.out.println("Processing ...");
-                    String response = ConvertToUpper(message) ;
+                    String response = ConvertToLower(message) ;
                     byte[]senddata=response.getBytes();
                     InetAddress IPAddress = InetAddress.getByName("localhost");
                     DatagramPacket sendpacket = new DatagramPacket (senddata, 
@@ -42,8 +44,6 @@ public class UDPServer {
                     server.send(sendpacket);
                     System.out.println("Send: " + response);
                     System.out.println("----------------------------");
-                    } catch (NullPointerException ex) {
-                        System.err.println("Null exception");
                     } catch (IOException ex) {
                         System.err.println("IO exception");
                     }
@@ -52,9 +52,24 @@ public class UDPServer {
         
   }
   
-  public static String ConvertToUpper(String word)
-  {
-      return word.toUpperCase();
-  }
+    public static String ConvertToLower(String word)
+    {
+        // convert to lower in case of upper case only
+        
+        String wordPrcessed = "";
+        char[] wordSplit = word.toCharArray();
+        for (int i = 0; i < word.length(); i++)
+        {
+            if (Character.isUpperCase(wordSplit[i]))
+            {
+                wordPrcessed += Character.toLowerCase(wordSplit[i]);
+            }
+            else
+            {
+                wordPrcessed += wordSplit[i];
+            }
+        }
+        return wordPrcessed;
+    }
   
 }
