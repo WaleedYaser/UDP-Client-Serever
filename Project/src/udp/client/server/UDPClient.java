@@ -12,6 +12,10 @@ public class UDPClient {
     
     public static void main(String[] args) {
         
+        // read args from cmd
+        String host = args[0];
+        int port = Integer.parseInt(args[1]);
+        
         //create the client socket that used to contact to udp server 
         try {
             clientsocket=new DatagramSocket(9090);
@@ -30,11 +34,11 @@ public class UDPClient {
             try 
             {
                 byte[]senddata=message.getBytes();
-                InetAddress IPAddress=InetAddress.getByName("localhost");
+                InetAddress IPAddress = InetAddress.getByName(host);
                 DatagramPacket sendpacket = new DatagramPacket (senddata,
                                                               senddata.length,
                                                               IPAddress,
-                                                              2000);
+                                                              port);
                 clientsocket.send(sendpacket);
 
                 // receiving from server 
